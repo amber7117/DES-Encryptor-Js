@@ -15,7 +15,7 @@ import {
     do_rounds,
     generateEncryptedText,
     decode
-} from '/util.js';
+} from '/main.js';
 
 let alertElement = document.getElementById("alert");
 let keyBody = document.getElementById("keyBody");
@@ -37,7 +37,7 @@ let form = document.getElementById("form");
 form.addEventListener('submit', Encrypt);
 keyElement.addEventListener('click', enterText);
 
-alertElement.style.display = "none";
+// alertElement.style.display = "none";
 
 function Encrypt(e) {
     e.preventDefault();

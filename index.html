@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DES Encyption</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+  <style>
+    .output {
+      border: 1px solid green;
+      padding: 10px;
+      border-radius: 10px;
+      outline: 1px solid;
+    }
+  </style>
+</head>
+
+<body>
+  <div style="max-width: 1000px;"
+    class="container d-flex justify-content-center flex-column justify-content-center card my-4">
+    <h1 class="text-center">DES Algorithem</h1>
+    <h4 class="text-center" style="font-style: italic;">By Muhammad Naeem</h4>
+    <!-- Alert -->
+    <div id="alert" class="px-5">
+      <div class="alert alert-primary" role="alert">
+        A simple primary alert—check it out!
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="row d-flex align-items-center justify-content-center">
+      <form id="form" style="max-width: 600px;">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Please Enter Key:</label>
+          <input type="text" class="form-control" id="keyText" aria-describedby="key">
+          <div id="keyValidater" class="form-text">Only 8-char long key is acceptible.</div>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Plain Text:</label>
+          <input type="text" class="form-control" id="plainText">
+        </div>
+        <button type="submit" class="btn btn-primary">Encrypt</button>
+      </form>
+    </div>
+
+    <hr>
+    <div class="container d-flex justify-content-center">
+      <div class="output">
+        <table class="table table-borderless" style="max-width :500px;">
+          <tbody>
+            <tr>
+              <td style="font-weight: bold;">Key Text:</td>
+              <td id="keyTextShow">#########</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold;">Plain Text:</td>
+              <td id="plainTextShow">$$$$$$$$</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; color: red;">Encrypted Text:</td>
+              <td style="font-weight: bold; color: red;" id="encrypTedTextShow">********</td>
+            </tr>
+            <tr>
+              <td style="font-weight: bold; color: green;">Decoded Text:</td>
+              <td style="font-weight: bold; color: green;" id="decodedTextShow">('_')</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+    <hr>
+    <div class="row p-2 rounded d-flex align-items-center">
+      <h3>Keys</h3>
+    </div>
+
+    <div class="table-responsive card">
+      <table class="table table-striped table-bordered">
+        <thead class="bg-success text-light">
+          <tr>
+            <th scope="col">Round #</th>
+            <th scope="col">C</th>
+            <th scope="col">D</th>
+            <th scope="col">Key</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider" id="keyBody">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row p-2 border-success rounded d-flex align-items-center">
+      <h3>Rounds Output</h3>
+    </div>
+    <div class="table-responsive card">
+      <table class="table table-sm table-striped table-bordered">
+        <thead class="bg-primary text-light">
+          <tr>
+            <th scope="col">Round #</th>
+            <th scope="col">Left</th>
+            <th scope="col">Right</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider" id="roundBody">
+        </tbody>
+      </table>
+    </div>
+
+
+    <div class="row p-2 border-success rounded d-flex align-items-center">
+      <h3>Decryption Keys</h3>
+    </div>
+    <div class="table-responsive card">
+      <table class="table table-striped table-bordered table-sm">
+        <thead class="bg-info text-light">
+          <tr>
+            <th scope="col">Round #</th>
+            <th scope="col">C</th>
+            <th scope="col">D</th>
+            <th scope="col">Key</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider" id="decryptionKeyBody">
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row p-2 border-success rounded d-flex align-items-center">
+      <h3>Decryption Rounds Output</h3>
+    </div>
+    <div class="table-responsive card mb-2">
+      <table class="table table-sm table-striped table-bordered">
+        <thead class="bg-success text-light">
+          <tr>
+            <th scope="col">Round #</th>
+            <th scope="col">Left</th>
+            <th scope="col">Right</th>
+          </tr>
+        </thead>
+        <tbody class="table-group-divider" id="decryptionRoundBody">
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+  <div class="" style="height: 100px;"></div>
+  <script src="script.js" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

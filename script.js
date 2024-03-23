@@ -1,8 +1,9 @@
 class Des {
      constructor(k) {
-        this.keyHex = CryptoJS.MD5(k).toString().substring(0, 8).toUpperCase();
-        this.key = CryptoJS.enc.Hex.parse(this.keyHex);
         this.iv = this.getDesKey(k);
+        this.key = CryptoJS.enc.Hex.parse(this.k);
+        this.setupKey();
+        
     }
     
   //  constructor(k) {

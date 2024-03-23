@@ -4,129 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DES Encryption/Decryption</title>
-  
     <style type="text/css">
         .txt { width: 400px; }
     </style>
 </head>
 <body>
-    <script>
-class Des {
-    constructor(k) {
-        this.iv = this.getDesKey(k); // This method needs to be adapted if you're using MD5 hashing
-        this.key = null;
-    }
 
-    async setupKey() {
-        // Assuming 'this.iv' is your secret key, you would typically use a hashing function here.
-        const rawKey = new TextEncoder().encode(this.iv);
-        this.key = await crypto.subtle.importKey(
-            "raw",
-            rawKey,
-            { name: "DES-CBC", length: 64 }, // Note: DES is generally considered insecure
-            false,
-            ["encrypt", "decrypt"]
-        );
-    }
+<form id="desForm">
+    <table>
+        <tr>
+            <td>Key</td>
+            <td><input type="text" name="key" id="key" class="txt" value="your-24-char-key"></td>
+        </tr>
+        <tr>
+            <td>Data</td>
+            <td><input type="text" name="data" id="data" class="txt"></td>
+        </tr>
+        <tr>
+            <td>Result</td>
+            <td><input type="text" id="result" class="txt" readonly></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="button" value="Encrypt" onclick="processData('encrypt')">
+                <input type="button" value="Decrypt" onclick="processData('decrypt')">
+            </td>
+        </tr>
+    </table>
+</form>
 
-    async encryptData(data) {
-        await this.setupKey(); // Ensure the key is set up before encrypting
-
-        const encoded = new TextEncoder().encode(data);
-        const iv = window.crypto.getRandomValues(new Uint8Array(8)); // DES uses an 8-byte IV
-        const encrypted = await crypto.subtle.encrypt(
-            { name: "DES-CBC", iv: iv },
-            this.key,
-            encoded
-        );
-        // Convert ArrayBuffer to hex string
-        const hexIv = Array.from(iv).map(b => b.toString(16).padStart(2, '0')).join('');
-        const hexData = Array.from(new Uint8Array(encrypted)).map(b => b.toString(16).padStart(2, '0')).join('');
-        return hexIv + hexData; // Prepend IV for use in decryption
-    }
-
-    async decryptData(data) {
-        await this.setupKey(); // Ensure the key is set up before decrypting
-
-        const iv = new Uint8Array(data.slice(0, 16).match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-        const encryptedData = new Uint8Array(data.slice(16).match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-        const decrypted = await crypto.subtle.decrypt(
-            { name: "DES-CBC", iv: iv },
-            this.key,
-            encryptedData
-        );
-        return new TextDecoder().decode(decrypted).trim();
-    }
-
-    getDesKey(k) {
-        // Simplified key derivation for the example
-        // You might want to use a hashing function here for a real implementation
-        return k.substring(0, 8); // Use first 8 characters as key
-    }
-}
-
-// Example usage:
-const des = new Des("YourSecret");
-
-// Encrypt
-des.encrypt("Hello, world!").then(encrypted => {
-    console.log("Encrypted:", encrypted);
-    // Decrypt
-    des.decrypt(encrypted).then(decrypted => {
-        console.log("Decrypted:", decrypted);
-    });
-});
-
-</script>
-    <form id="desForm">
-        <table>
-            <tr>
-                <td>Key</td>
-                <td><input type="text" name="key" id="key" class="txt" value="DD8E0593-B531-4785-99A7-6CC42325F81E"></td>
-            </tr>
-            <tr>
-                <td>Data</td>
-                <td><input type="text" name="data" id="data" class="txt"></td>
-            </tr>
-            <tr>
-                <td>Result</td>
-                <td><input type="text" id="result" class="txt" readonly></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="button" value="Encrypt" onclick="encryptData()">
-                    <input type="button" value="Decrypt" onclick="decryptData()">
-                </td>
-            </tr>
-        </table>
-    </form>
- 
-    <script>
-        // Des class definition goes here (with getDesKey modified for browser)
-
-        async function processData(action) {
-            const keyInput = document.getElementById('key').value;
-            const dataInput = document.getElementById('data').value;
-            const des = new Des(keyInput);
-            await des.setupKey();
-
-            if (action === 'encrypt') {
-                const encrypted = await des.Encrypt(dataInput);
-                document.getElementById('result').value = encrypted;
-            } else if (action === 'decrypt') {
-                const decrypted = await des.Decrypt(dataInput);
-                document.getElementById('result').value = decrypted;
-            }
+<script src="path/to/your/des/library.js"></script>
+<script>
+    class Des {
+        constructor(key) {
+            this.key = key;
         }
 
-        Des.prototype.getDesKey = async function(k) {
-            const encoder = new TextEncoder();
-            const data = encoder.encode(k);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-            const hashArray = Array.from(new Uint8Array(hashBuffer));
-            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-            return hashHex.substring(0, 8).toUpperCase();
-        };
-    </script>
+        async encrypt(data) {
+            // Assuming your DES library has an encrypt function
+            // This function would likely return a Promise resolving to the encrypted data
+            return DESLibrary.encrypt(data, this.key);
+        }
+
+        async decrypt(data) {
+            // Assuming your DES library has a decrypt function
+            // This function would likely return a Promise resolving to the decrypted data
+            return DESLibrary.decrypt(data, this.key);
+        }
+    }
+
+    async function processData(action) {
+        const keyInput = document.getElementById('key').value;
+        const dataInput = document.getElementById('data').value;
+        const des = new Des(keyInput);
+
+        if (action === 'encrypt') {
+            const encrypted = await des.encrypt(dataInput);
+            document.getElementById('result').value = encrypted;
+        } else if (action === 'decrypt') {
+            const decrypted = await des.decrypt(dataInput);
+            document.getElementById('result').value = decrypted;
+        }
+    }
+</script>
 </body>
 </html>

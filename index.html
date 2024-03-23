@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 
     <title>DES Encryption/Decryption</title>
@@ -36,22 +37,6 @@
 </form>
 
 <script src="script.js"></script>
-<script>
 
-
-    async function processData(action) {
-        const keyInput = document.getElementById('key').value;
-        const dataInput = document.getElementById('data').value;
-        const des = new Des(keyInput);
-
-        if (action === 'encrypt') {
-            const encrypted = await des.Encrypt(dataInput);
-            document.getElementById('result').value = encrypted;
-        } else if (action === 'decrypt') {
-            const decrypted = await des.Decrypt(dataInput);
-            document.getElementById('result').value = decrypted;
-        }
-    }
-</script>
 </body>
 </html>

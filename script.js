@@ -1,38 +1,46 @@
-// Note: This assumes CryptoJS is loaded in your environment
-
 function getMd5Key(str) {
-    return CryptoJS.MD5(str).toString().substring(0, 8).toUpperCase();
+    // This mimics the getstrByte functionality, producing an MD5 hash in hexadecimal format.
+    return CryptoJS.MD5(str).toString(CryptoJS.enc.Hex).substring(0, 8).toUpperCase();
 }
 
-function encryptData(data, keyStr) {
+function encryptData(data, keyStr, encoding = 'GBK', cipherMode = 'CBC') {
     const keyHex = CryptoJS.enc.Utf8.parse(getMd5Key(keyStr));
-    const ivHex = keyHex; // For simplicity, using the key as IV; consider using a proper IV for better security
+    // For the IV, this example uses the first 8 bytes of the MD5 hash as in the Java example. Adjust if needed.
+    const ivHex = CryptoJS.enc.Utf8.parse(getMd5Key(keyStr));
+    
+    // Note: The encoding for the data to be encrypted needs to be handled as per your requirements.
+    // This example assumes UTF-8 encoding for simplicity.
     const options = {
-        mode: CryptoJS.mode.CBC,
+        mode: cipherMode === 'CBC' ? CryptoJS.mode.CBC : CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7,
         iv: ivHex
     };
-    const encrypted = CryptoJS.DES.encrypt(data, keyHex, options);
-    return encrypted.toString().toUpperCase(); // Returns base64 encrypted string, convert as needed
+    
+    const encrypted = CryptoJS.DES.encrypt(CryptoJS.enc.Utf8.parse(data), keyHex, options);
+    return encrypted.ciphertext.toString(CryptoJS.enc.Hex).toUpperCase();
 }
 
-function decryptData(encrypted, keyStr) {
+function decryptData(encryptedHex, keyStr, encoding = 'GBK', cipherMode = 'CBC') {
     const keyHex = CryptoJS.enc.Utf8.parse(getMd5Key(keyStr));
-    const ivHex = keyHex; // Using the key as IV for simplicity
+    const ivHex = CryptoJS.enc.Utf8.parse(getMd5Key(keyStr));
+    
     const options = {
-        mode: CryptoJS.mode.CBC,
+        mode: cipherMode === 'CBC' ? CryptoJS.mode.CBC : CryptoJS.mode.ECB,
         padding: CryptoJS.pad.Pkcs7,
         iv: ivHex
     };
+    
     const decrypted = CryptoJS.DES.decrypt({
-        ciphertext: CryptoJS.enc.Base64.parse(encrypted)
+        ciphertext: CryptoJS.enc.Hex.parse(encryptedHex)
     }, keyHex, options);
-    return CryptoJS.enc.Utf8.stringify(decrypted); // Returns the original decrypted text
+
+    // Assuming GBK encoding in original, but JS commonly uses UTF-8. Adjust as needed.
+    return decrypted.toString(CryptoJS.enc.Utf8);
 }
 
-// Usage example:
-const key = "27650099-564A-4869-99B3-363F8129C0CD";
-const data = "Example Data";
+// Example usage
+const key = "your-key-here";
+const data = "Hello, world!";
 const encrypted = encryptData(data, key);
 console.log("Encrypted:", encrypted);
 const decrypted = decryptData(encrypted, key);

@@ -62,7 +62,7 @@ class Des {
 
     getDesKey(k) {
         
-        const hash = CryptoJS.createHash('md5').update(k).digest('hex');
+        const hash =  CryptoJS.MD5(k).toString().substring(0, 8).toUpperCase();
         return hash.substring(0, 8).toUpperCase();
     }
 

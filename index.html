@@ -10,6 +10,74 @@
     </style>
 </head>
 <body>
+    <script>
+class Des {
+    constructor(k) {
+        this.iv = this.getDesKey(k); // This method needs to be adapted if you're using MD5 hashing
+        this.key = null;
+    }
+
+    async setupKey() {
+        // Assuming 'this.iv' is your secret key, you would typically use a hashing function here.
+        const rawKey = new TextEncoder().encode(this.iv);
+        this.key = await crypto.subtle.importKey(
+            "raw",
+            rawKey,
+            { name: "DES-CBC", length: 64 }, // Note: DES is generally considered insecure
+            false,
+            ["encrypt", "decrypt"]
+        );
+    }
+
+    async encryptData(data) {
+        await this.setupKey(); // Ensure the key is set up before encrypting
+
+        const encoded = new TextEncoder().encode(data);
+        const iv = window.crypto.getRandomValues(new Uint8Array(8)); // DES uses an 8-byte IV
+        const encrypted = await crypto.subtle.encrypt(
+            { name: "DES-CBC", iv: iv },
+            this.key,
+            encoded
+        );
+        // Convert ArrayBuffer to hex string
+        const hexIv = Array.from(iv).map(b => b.toString(16).padStart(2, '0')).join('');
+        const hexData = Array.from(new Uint8Array(encrypted)).map(b => b.toString(16).padStart(2, '0')).join('');
+        return hexIv + hexData; // Prepend IV for use in decryption
+    }
+
+    async decryptData(data) {
+        await this.setupKey(); // Ensure the key is set up before decrypting
+
+        const iv = new Uint8Array(data.slice(0, 16).match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+        const encryptedData = new Uint8Array(data.slice(16).match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+        const decrypted = await crypto.subtle.decrypt(
+            { name: "DES-CBC", iv: iv },
+            this.key,
+            encryptedData
+        );
+        return new TextDecoder().decode(decrypted).trim();
+    }
+
+    getDesKey(k) {
+        // Simplified key derivation for the example
+        // You might want to use a hashing function here for a real implementation
+        return k.substring(0, 8); // Use first 8 characters as key
+    }
+}
+
+// Example usage:
+const des = new Des("YourSecret");
+
+// Encrypt
+des.encrypt("Hello, world!").then(encrypted => {
+    console.log("Encrypted:", encrypted);
+    // Decrypt
+    des.decrypt(encrypted).then(decrypted => {
+        console.log("Decrypted:", decrypted);
+    });
+});
+
+</script>
     <form id="desForm">
         <table>
             <tr>

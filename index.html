@@ -35,23 +35,7 @@
 
 <script src="script.js"></script>
 <script>
-    class Des {
-        constructor(key) {
-            this.key = key;
-        }
 
-        async encrypt(data) {
-            // Assuming your DES library has an encrypt function
-            // This function would likely return a Promise resolving to the encrypted data
-            return DESLibrary.encrypt(data, this.key);
-        }
-
-        async decrypt(data) {
-            // Assuming your DES library has a decrypt function
-            // This function would likely return a Promise resolving to the decrypted data
-            return DESLibrary.decrypt(data, this.key);
-        }
-    }
 
     async function processData(action) {
         const keyInput = document.getElementById('key').value;

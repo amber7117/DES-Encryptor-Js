@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DES Encryption/Decryption</title>
-    <script src="script.js"></script>
+  
     <style type="text/css">
         .txt { width: 400px; }
     </style>
@@ -32,35 +32,33 @@
             </tr>
         </table>
     </form>
-
+  <script src="script.js"></script>
     <script>
-        function encryptData() {
-            var key = document.getElementById("key").value;
-            var data = document.getElementById("data").value;
+        // Des class definition goes here (with getDesKey modified for browser)
 
-            var keyHex = CryptoJS.enc.Utf8.parse(key);
-            var encrypted = CryptoJS.DES.encrypt(data, keyHex, {
-                mode: CryptoJS.mode.ECB,
-                padding: CryptoJS.pad.Pkcs7
-            });
+        async function processData(action) {
+            const keyInput = document.getElementById('key').value;
+            const dataInput = document.getElementById('data').value;
+            const des = new Des(keyInput);
+            await des.setupKey();
 
-            document.getElementById("result").value = encrypted.toString();
+            if (action === 'encrypt') {
+                const encrypted = await des.Encrypt(dataInput);
+                document.getElementById('result').value = encrypted;
+            } else if (action === 'decrypt') {
+                const decrypted = await des.Decrypt(dataInput);
+                document.getElementById('result').value = decrypted;
+            }
         }
 
-        function decryptData() {
-            var key = document.getElementById("key").value;
-            var data = document.getElementById("data").value;
-
-            var keyHex = CryptoJS.enc.Utf8.parse(key);
-            var decrypted = CryptoJS.DES.decrypt({
-                ciphertext: CryptoJS.enc.Hex.parse(data)
-            }, keyHex, {
-                mode: CryptoJS.mode.ECB,
-                padding: CryptoJS.pad.Pkcs7
-            });
-
-            document.getElementById("result").value = decrypted.toString(CryptoJS.enc.Utf8);
-        }
+        Des.prototype.getDesKey = async function(k) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(k);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex.substring(0, 8).toUpperCase();
+        };
     </script>
 </body>
 </html>

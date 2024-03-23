@@ -1,9 +1,15 @@
 class Des {
-    constructor(k) {
+     constructor(k) {
+        this.keyHex = CryptoJS.MD5(k).toString().substring(0, 8).toUpperCase();
+        this.key = CryptoJS.enc.Hex.parse(this.keyHex);
         this.iv = this.getDesKey(k);
-        this.key = null;
-        this.setupKey();
     }
+    
+  //  constructor(k) {
+   //     this.iv = this.getDesKey(k);
+  //      this.key = null;
+  //      this.setupKey();
+  //  }
 
     async setupKey() {
         const rawKey = new TextEncoder().encode(this.iv);
@@ -55,7 +61,8 @@ class Des {
     }
 
     getDesKey(k) {
-        const hash = crypto.createHash('md5').update(k).digest('hex');
+        
+        const hash = CryptoJS.createHash('md5').update(k).digest('hex');
         return hash.substring(0, 8).toUpperCase();
     }
 

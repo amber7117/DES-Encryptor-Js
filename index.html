@@ -45,10 +45,10 @@
         const des = new Des(keyInput);
 
         if (action === 'encrypt') {
-            const encrypted = await des.encrypt(dataInput);
+            const encrypted = await des.Encrypt(dataInput);
             document.getElementById('result').value = encrypted;
         } else if (action === 'decrypt') {
-            const decrypted = await des.decrypt(dataInput);
+            const decrypted = await des.Decrypt(dataInput);
             document.getElementById('result').value = decrypted;
         }
     }
